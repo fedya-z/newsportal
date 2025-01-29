@@ -1,0 +1,31 @@
+{% extends 'flatpages/default.html' %}
+{% load custom_filters %}
+
+{% block title %}
+Posts
+{% endblock title %}
+
+{% block content %}
+   <h1>Все новости</h1>
+   <hr>
+   {% if posts %}
+       <table>
+           <tr>
+               <td>Загаловок</td>
+               <td>Дата публикации</td>
+               <td>Содержание</td>
+           </tr>
+
+           {% for post in posts %}
+           <tr>
+               <td>{{ post.post_name }}</td>
+               <td>{{ post.time_in_post|censor }}</td>
+               <td>{{ post.text_post|truncatechars:20, censor }}</td>
+           </tr>
+           {% endfor %}
+
+       </table>
+   {% else %}
+       <h2>Новостей нет!</h2>
+   {% endif %}
+{% endblock content %}
