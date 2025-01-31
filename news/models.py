@@ -1,6 +1,7 @@
 from django.db import models
 from datetime import datetime
 from django.contrib.auth.models import User
+from django.urls import reverse
 
 
 class Author(models.Model):
@@ -23,13 +24,13 @@ class Author(models.Model):
         self.save()
 
     def __str__(self):
-        return self.name.title()
+        return self.author_name.title()
 
 class Category(models.Model):
     category_name = models.CharField(max_length=255, unique = True)
 
     def __str__(self):
-        return self.name.title()
+        return self.category_name.title()
 
 
 class Post(models.Model):
@@ -61,13 +62,14 @@ class Post(models.Model):
         return self.text_post[:124] + '...' if len(self.text_post) > 124 else self.text_post
 
     def __str__(self):
-        return f'{self.name.title()}: {self.description[:20]}'
+        return f'{self.post_name.title()}: {self.description[:20]}'
+
+    def get_absolute_url(self):
+        return reverse('post_detail', args=[str(self.id)])
 class PostCategory(models.Model):
     post = models.ForeignKey(Post, on_delete = models.CASCADE)
     category = models.ForeignKey(Category, on_delete = models.CASCADE)
 
-    def __str__(self):
-        return self.name.title()
 
 
 class Comment(models.Model):
@@ -87,4 +89,4 @@ class Comment(models.Model):
         self.save()
 
     def __str__(self):
-        return f'{self.name.title()}: {self.description[:20]}'
+        return f'{self.comment_text.title()}: {self.description[:20]}'
