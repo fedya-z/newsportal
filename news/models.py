@@ -2,6 +2,7 @@ from django.db import models
 from datetime import datetime
 from django.contrib.auth.models import User
 from django.urls import reverse
+from django.contrib.auth.models import User
 
 
 class Author(models.Model):
@@ -90,3 +91,16 @@ class Comment(models.Model):
 
     def __str__(self):
         return f'{self.comment_text.title()}: {self.description[:20]}'
+
+
+class Subscription(models.Model):
+    user = models.ForeignKey(
+        to=User,
+        on_delete=models.CASCADE,
+        related_name='subscriptions',
+    )
+    category = models.ForeignKey(
+        to='Category',
+        on_delete=models.CASCADE,
+        related_name='subscriptions',
+    )
