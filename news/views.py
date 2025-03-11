@@ -9,6 +9,8 @@ from django.views.decorators.csrf import csrf_protect
 from .models import Subscription, Category
 from django.db.models import Exists, OuterRef
 from django.contrib.auth.decorators import login_required
+from django.core.cache import cache
+
 
 class PostsList(ListView):
     model = Post
@@ -26,6 +28,14 @@ class PostDetail(DetailView):
     model = Post
     template_name = 'post.html'
     context_object_name = 'post'
+
+    def get_object(self, *args, **kwargs):
+        obj = cache.get(f'post-{self.kwargs["pk"]}',
+                        None)
+        if not obj:
+            obj = super().get_object(queryset=self.queryset)
+            cache.set(f'product-{self.kwargs["pk"]}', obj)
+        return obj
 
 class SearchPage(ListView):
     model = Post
